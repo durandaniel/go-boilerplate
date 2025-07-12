@@ -1,0 +1,12 @@
+# Arquivo de variáveis de ambiente com senhas e segredos
+.env
+
+# Binários compilados // a pasta main é onde o Go armazena os binários compilados do projeto, se você estiver usando o comando 'go build' para compilar o projeto. Não criamos a pasta main ela só aparecerá após o "go build" ser executado.
+/main
+
+# Logs
+*.log
+
+# Dependências do Go (pasta vendor) // a pasta vendor é onde o Go armazena as dependências do projeto, se você estiver usando o comando 'go mod vendor' para gerenciar dependências.
+# Se você não estiver usando vendor, pode remover esta linha.
+/vendor/

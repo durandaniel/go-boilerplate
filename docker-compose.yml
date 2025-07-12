@@ -1,0 +1,64 @@
+# Versão do Docker Compose que estamos usando. A 3.8 é moderna e estável.
+version: '3.8'
+
+# 'services' é onde definimos cada container que fará parte do nosso projeto.
+services:
+  # Este é o nosso serviço/container para a aplicação Go.
+  app:
+    # 'build: .' diz ao Docker Compose para construir a imagem a partir do Dockerfile
+    # que está na mesma pasta que este arquivo (a raiz do projeto).
+    build: .
+    # 'container_name' define um nome fixo para o container, facilitando encontrá-lo.
+    container_name: go-boilerplate-app
+    # 'ports' mapeia a porta do container para a porta da sua máquina.
+    # "8080:8080" significa: a porta 8080 da sua máquina (host) será redirecionada
+    # para a porta 8080 dentro do container da aplicação.
+    ports:
+      - "8080:8080"
+    # 'volumes' permite sincronizar arquivos entre a sua máquina e o container.
+    # Isso é fantástico para desenvolvimento, pois você pode alterar o código
+    # na sua máquina e ele será refletido dentro do container sem precisar reconstruir.
+    volumes:
+      - .:/app
+    # 'depends_on' garante que o container do banco de dados (db) seja iniciado
+    # ANTES do container da nossa aplicação (app). Isso evita que a app tente
+    # se conectar a um banco que ainda não está pronto.
+    depends_on:
+      - db
+    # 'env_file' aponta para um arquivo que contém nossas variáveis de ambiente.
+    # O Docker Compose irá carregar essas variáveis e injetá-las no container.
+    # É uma prática de segurança para não deixar senhas direto no código.
+    env_file:
+      - .env
+
+  # Este é o nosso serviço/container para o banco de dados PostgreSQL.
+  db:
+    # 'image' diz ao Docker para baixar a imagem pronta do PostgreSQL versão 13
+    # do Docker Hub, o repositório oficial de imagens.
+    image: postgres:13
+    # Nome fixo para o container do banco de dados.
+    container_name: go-boilerplate-db
+    # 'restart: always' garante que se o container do banco de dados parar por
+    # algum motivo, o Docker irá tentar reiniciá-lo automaticamente.
+    restart: always
+    # Aqui, também usamos o env_file para carregar as variáveis de ambiente
+    # que o PostgreSQL precisa para iniciar, como o nome do banco, usuário e senha.
+    env_file:
+      - .env
+    # Mapeamos a porta 5432 do container para a porta 5432 da sua máquina.
+    # Isso é opcional, mas útil se você quiser se conectar ao banco de dados
+    # usando uma ferramenta de fora do Docker (como o DBeaver ou pgAdmin).
+    ports:
+      - "5432:5432"
+    # 'volumes' aqui tem um propósito diferente: persistência de dados.
+    # 'postgres-data:/var/lib/postgresql/data' cria um "volume nomeado" chamado 'postgres-data'.
+    # O Docker irá garantir que todos os dados que o Postgres salva dentro do container
+    # sejam, na verdade, salvos nesse volume. A grande vantagem é que, mesmo que você
+    # destrua o container ('docker-compose down'), o volume com seus dados permanece intacto.
+    # Quando você iniciar de novo, o Postgres se conectará ao volume existente e seus dados estarão lá.
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+# 'volumes' no nível raiz é onde declaramos os volumes nomeados que usamos acima.
+volumes:
+  postgres-data: # Apenas declaramos que 'postgres-data' existe.
