@@ -19,7 +19,7 @@ O projeto utiliza uma estrutura inspirada na [Clean Architecture](https://blog.c
     -   `/service`: Camada que contém as regras de negócio.
     -   `/repository`: Camada de acesso a dados (interação com o banco de dados).
 -   `/view`: Contém os arquivos de front-end (HTML, CSS).
--   `/deploy`: Contém os arquivos de infraestrutura como `Dockerfile` e `docker-compose.yml`.
+                                    //-   `/deploy`: Contém os arquivos de infraestrutura como `Dockerfile` e `docker-compose.yml`.
 
 ## Como Executar
 
